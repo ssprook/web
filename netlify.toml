@@ -1,12 +1,22 @@
-[images]
-  remote_images = ["https://source.unsplash.com/.*", "https://images.unsplash.com/.*", "https://ext.same-assets.com/.*", "https://ugc.same-assets.com/.*"]
-
 [build]
   command = "bun run build"
   publish = ".next"
 
+# Configuration des images distantes pour Netlify
 [build.environment]
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  NEXT_PUBLIC_IMAGE_DOMAINS = "source.unsplash.com,images.unsplash.com,ext.same-assets.com,ugc.same-assets.com"
 
+# Activer l'optimisation d'images de Netlify
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    enable_netlify_image_cdn = true
+
+# Autoriser les domains externes pour les images
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/images?url=:url"
+  status = 200
+  force = true
+  conditions = {MediaType = "image/*"}
